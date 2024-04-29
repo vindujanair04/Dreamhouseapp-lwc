@@ -109,4 +109,21 @@ public with sharing class PropertyController {
             ORDER BY CreatedDate
         ];
     }
+
+    @AuraEnabled
+    public static String generateSocialMediaPosts(String propertyId) {
+        Map<String, String> property = new Map<String, String>();
+        property.put('id', propertyId);
+
+        ConnectApi.WrappedValue propertyValue = new ConnectApi.WrappedValue();
+        propertyValue.value = property;
+
+        Map<String, ConnectApi.WrappedValue> inputParams = new Map<String, ConnectApi.WrappedValue>();
+        inputParams.put('Input:Property', propertyValue);
+
+        return EinsteinGenerativeGatewayService.generateResponseFromPromptTemplate(
+            'Generate_Social_Media_Posts',
+            inputParams
+        );
+    }
 }
